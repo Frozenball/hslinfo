@@ -77,6 +77,12 @@ body {
     text-align: center;
     margin-top: 70px;
 }
+.move .clock {
+  padding-left: 30px;
+}
+.move .date {
+  padding-left: 30px;
+}
 .slide-welcome {
     transition: background-color 3000ms linear;
 }

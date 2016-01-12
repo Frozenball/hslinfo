@@ -81,6 +81,13 @@ $(function(){
             changeText($('.js-welcome-text'), STILL_AWAKE);
         }
 
+
+        if ((hours%2) == 0) {
+          $('.slides').addClass('move');
+        } else {
+          $('.slides').removeClass('move');
+        }
+        
         $('.js-clock').text(padding(hours) + ':' + padding(minutes) + ':' + padding(seconds));
         $('.js-date').text(date.getDate()+'.'+(date.getMonth()+1)+'.'+date.getFullYear());
         setTimeout(updateTime, 1000);
