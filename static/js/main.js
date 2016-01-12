@@ -87,7 +87,7 @@ $(function(){
         } else {
           $('.slides').removeClass('move');
         }
-        
+
         $('.js-clock').text(padding(hours) + ':' + padding(minutes) + ':' + padding(seconds));
         $('.js-date').text(date.getDate()+'.'+(date.getMonth()+1)+'.'+date.getFullYear());
         setTimeout(updateTime, 1000);
@@ -126,7 +126,8 @@ $(function(){
       ];
       var lol = 0;
 
-      for (var deadline of deadlines) {
+      for (var i = 0; i < deadlines.length; i++) {
+        var deadline = deadlines[i];
         var daysLeft = Math.round((deadline[0] - Date.now()) / (1000 * 60 * 60 * 24));
         if (daysLeft > 0) {
           $deadlineTimer.text(daysLeft);
