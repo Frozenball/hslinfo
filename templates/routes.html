@@ -8,3 +8,14 @@
     </tr>
 {% endfor %}
 </table>
+
+<h1>Jämeräntaival</h1>
+<table class="departure-table">
+{% for departure in departures['2222210'] %}
+    <tr>
+        <td class="name">{{ departure.name }}</td>
+        <td class="code_short">{{ departure.code_short }}</td>
+        <td class="time">{{ departure.time }}</td>
+    </tr>
+{% endfor %}
+</table>

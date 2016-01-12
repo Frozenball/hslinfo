@@ -14,6 +14,7 @@ Departure = collections.namedtuple("Departure", ['code_short', 'time', 'name'])
 try:
     HSL_USERNAME = os.environ['HSL_USERNAME']
     HSL_PASSWORD = os.environ['HSL_PASSWORD']
+    WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
 except KeyError as e:
     print "Missing configuration variable: %s" % e
     print ""
@@ -43,7 +44,8 @@ if example_request.status_code != 200:
 
 
 STOPS = (
-    Stop('2222209', 99),
+    Stop('2222209', 2),
+    Stop('2222210', 8)
     # Stop('2222233', 3),
     # Stop('2222235', 3),
 )
@@ -128,10 +130,10 @@ def routes():
 def weather():
     return Response(
         json.dumps(
-            cache_get('http://api.openweathermap.org/data/2.5/weather?q=Espoo')
+            cache_get('http://api.openweathermap.org/data/2.5/weather?q=Espoo&appid=%s' % WEATHER_API_KEY)
         ),
         mimetype='application/json'
     )
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5001, debug=False)
+    app.run(host='0.0.0.0', port=5002, debug=False)

@@ -144,3 +144,22 @@ body {
     font-size: 50px;
     margin-top: 30px;
 }
+.slide-bachelor {
+  background-color: #e74c3c;
+}
+.slide-bachelor-box {
+  margin-left: 50px;
+  margin-right: 50px;
+  text-align: center;
+  font-size: 30px;
+}
+#js-next-deadline {
+  font-size: 180px;
+  display: block;
+  margin: 0px auto;
+  text-align: center;
+}
+#js-next-deadline-text {
+  display: block;
+  font-size: 100px;
+}

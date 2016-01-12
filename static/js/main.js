@@ -107,6 +107,27 @@ $(function(){
             $('#update-container').text(err);
         });
     };
+    var updateDeadline = function(){
+      var $deadlineTimer = $('#js-next-deadline');
+      var $deadlineTimerText = $('#js-next-deadline-text');
+
+      var deadlines = [
+        [new Date(2016, 1, 14), 'V1-palautus'],
+        [new Date(2016, 1, 28), 'V2-palautus'],
+        [new Date(2016, 2, 28), 'V3-palautus'],
+        [new Date(2016, 3, 17), 'lopullinen V4-palautus']
+      ];
+      var lol = 0;
+
+      for (var deadline of deadlines) {
+        var daysLeft = Math.round((deadline[0] - Date.now()) / (1000 * 60 * 60 * 24));
+        if (daysLeft > 0) {
+          $deadlineTimer.text(daysLeft);
+          $deadlineTimerText.text(deadline[1]);
+          break;
+        }
+      }
+    };
 
     var updateRoutes = function(){
         $('#update-container').load('/routes');
@@ -136,6 +157,7 @@ $(function(){
             updateSlides();
         }
     }, 1000);
+    setInterval(updateDeadline, 1000);
 
     // TODO: ruokalistat
 
