@@ -130,7 +130,7 @@ def routes():
 def weather():
     return Response(
         json.dumps(
-            cache_get('http://api.openweathermap.org/data/2.5/weather?q=Espoo&appid=%s' % WEATHER_API_KEY)
+            cache_get('http://api.openweathermap.org/data/2.5/weather?id=660158&appid=%s' % WEATHER_API_KEY)
         ),
         mimetype='application/json'
     )
