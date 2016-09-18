@@ -119,10 +119,10 @@ $(function(){
       var $deadlineTimerText = $('#js-next-deadline-text');
 
       var deadlines = [
-        [new Date(2016, 1, 14), 'V1-palautus'],
-        [new Date(2016, 1, 28), 'V2-palautus'],
-        [new Date(2016, 2, 28), 'V3-palautus'],
-        [new Date(2016, 3, 17), 'lopullinen V4-palautus']
+        [new Date(2016, 9, 16), 'V1-palautus'],
+        [new Date(2016, 9, 30), 'V2-palautus'],
+        [new Date(2016, 10, 27), 'V3-palautus'],
+        [new Date(2016, 11, 18), 'lopullinen V4-palautus']
       ];
       var lol = 0;
 
