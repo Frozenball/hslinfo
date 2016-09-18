@@ -92,6 +92,17 @@ $(function(){
         $('.js-date').text(date.getDate()+'.'+(date.getMonth()+1)+'.'+date.getFullYear());
         setTimeout(updateTime, 1000);
     };
+    var updateWallpaper = function(){
+        $.getJSON(
+            '/wallpaper'
+        ).success(function(data){
+            console.log('wallpaper', data, data['url']);
+            $('.slide-welcome').css('background', 'linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.2)), url(' + data['url'] + ')');
+            setTimeout(function(){
+                updateWallpaper();
+            }, 3600*1000);
+        });
+    };
     var updateWeather = function(){
         $.getJSON(
             '/weather'
@@ -110,6 +121,19 @@ $(function(){
             setTimeout(function(){
                 updateWeather();
             }, 1000*60*15);
+        }).error(function(err){
+            $('#update-container').text(err);
+        });
+    };
+    var updateQuotes = function(){
+        $.getJSON(
+            '/quote'
+        ).success(function(data){
+            $('.js-quote').text(data['contents']['quotes'][0]['quote']);
+            $('.js-quote-author').text(data['contents']['quotes'][0]['author']);
+            setTimeout(function(){
+                updateQuotes();
+            }, 3600*1000);
         }).error(function(err){
             $('#update-container').text(err);
         });
@@ -141,7 +165,7 @@ $(function(){
         $('#update-container').load('/routes');
         setTimeout(function(){
             updateRoutes();
-        }, 1000*60*5);
+        }, 1000*60*1);
     };
     var howOften = 20*1000;
     var slideCounter = 0;
@@ -175,4 +199,6 @@ $(function(){
     updateWeather();
     updateTime();
     updateSlides();
+    updateWallpaper();
+    updateQuotes();
 });

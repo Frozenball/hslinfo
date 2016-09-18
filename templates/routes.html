@@ -1,7 +1,8 @@
 <h1>Teekkarikylä</h1>
+<div class="next_kamppi"><span class="minutes">{{ minutes_until_kamppi }}<span>min</span></span> until next Kamppi bus</div>
 <table class="departure-table">
 {% for departure in departures['2222209'] %}
-    <tr>
+    <tr class="departure_{{ departure.code_short }}">
         <td class="name">{{ departure.name }}</td>
         <td class="code_short">{{ departure.code_short }}</td>
         <td class="time">{{ departure.time }}</td>
@@ -12,7 +13,7 @@
 <h1>Jämeräntaival</h1>
 <table class="departure-table">
 {% for departure in departures['2222210'] %}
-    <tr>
+    <tr class="departure_{{ departure.code_short }}">
         <td class="name">{{ departure.name }}</td>
         <td class="code_short">{{ departure.code_short }}</td>
         <td class="time">{{ departure.time }}</td>

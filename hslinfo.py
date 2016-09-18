@@ -1,3 +1,4 @@
+from datetime import datetime
 import time
 import sys
 import json
@@ -5,7 +6,7 @@ import os
 import collections
 
 from werkzeug.contrib.cache import SimpleCache
-from flask import Flask, render_template, Response
+from flask import Flask, jsonify, render_template, Response
 import requests
 
 Stop = collections.namedtuple("Stop", ['code', 'max_entries'])
@@ -15,6 +16,7 @@ try:
     HSL_USERNAME = os.environ['HSL_USERNAME']
     HSL_PASSWORD = os.environ['HSL_PASSWORD']
     WEATHER_API_KEY = os.environ['WEATHER_API_KEY']
+    DEBUG = bool(int(os.environ['DEBUG']))
 except KeyError as e:
     print "Missing configuration variable: %s" % e
     print ""
@@ -25,6 +27,10 @@ except KeyError as e:
     print "export HSL_USERNAME=''"
     print "export HSL_PASSWORD=''"
     sys.exit(1)
+
+if DEBUG:
+    print "********* WARNING *********"
+    print "DEBUG MODE IS ON!"
 
 # Test if we have the right configuration
 example_request = requests.get(
@@ -52,13 +58,13 @@ STOPS = (
 API_CACHE = SimpleCache()
 
 
-def cache_get(url):
+def cache_get(url, timeout=5*60):
     rv = API_CACHE.get(url)
     if rv:
         return rv
     else:
         rv = requests.get(url).json()
-        API_CACHE.set(url, rv, timeout=5*60)
+        API_CACHE.set(url, rv, timeout=timeout)
         return rv
 
 
@@ -97,6 +103,7 @@ def frontpage():
 @app.route('/routes')
 def routes():
     departures = {}
+    minutes_until_kamppi = None
     for stop in STOPS:
         response = cache_get(
             'http://api.reittiopas.fi/hsl/prod/'
@@ -109,9 +116,19 @@ def routes():
         )
         if response[0]['departures']:
             departures[stop.code] = []
-            for i, departure in enumerate(response[0]['departures']):
+            i = 0
+            for departure in response[0]['departures']:
                 if i >= stop.max_entries:
                     break
+                hours = int(converttime(departure['time'])[0:2])
+                minutes = int(converttime(departure['time'])[3:5])
+                departure_time = datetime(year=datetime.now().year, month=datetime.now().month, day=datetime.now().day, hour=hours, minute=minutes)
+                if datetime.now() > departure_time:
+                    print('skipping', datetime.now(), departure_time)
+                    continue
+                i += 1
+                if minutes_until_kamppi is None and convertcode(departure['code']).startswith('102'):
+                    minutes_until_kamppi = int(round((departure_time - datetime.now()).seconds/60))
                 departures[stop.code].append(
                     Departure(
                         convertcode(departure['code']),
@@ -122,7 +139,8 @@ def routes():
 
     return render_template(
         'routes.html',
-        departures=departures
+        departures=departures,
+        minutes_until_kamppi=minutes_until_kamppi
     )
 
 
@@ -135,5 +153,25 @@ def weather():
         mimetype='application/json'
     )
 
+
+@app.route('/wallpaper')
+def wallpaper():
+    data = (
+      cache_get('http://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=en-US', timeout=3600*10)
+    )
+    url = 'https://www.bing.com/' + data['images'][0]['url']
+    return jsonify(url=url)
+
+
+@app.route('/quote')
+def quote():
+    return Response(
+        json.dumps(
+            cache_get('http://quotes.rest/qod.json', timeout=3600*10)
+        ),
+        mimetype='application/json'
+    )
+
+
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5002, debug=False)
+    app.run(host='0.0.0.0', port=5002, debug=DEBUG)
