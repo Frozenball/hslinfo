@@ -140,25 +140,8 @@ $(function(){
     };
     var updateDeadline = function(){
       var $deadlineTimer = $('#js-next-deadline');
-      var $deadlineTimerText = $('#js-next-deadline-text');
-
-      var deadlines = [
-        [new Date(2016, 9, 16), 'V1-palautus'],
-        [new Date(2016, 9, 30), 'V2-palautus'],
-        [new Date(2016, 10, 27), 'V3-palautus'],
-        [new Date(2016, 11, 18), 'lopullinen V4-palautus']
-      ];
-      var lol = 0;
-
-      for (var i = 0; i < deadlines.length; i++) {
-        var deadline = deadlines[i];
-        var daysLeft = Math.round((deadline[0] - Date.now()) / (1000 * 60 * 60 * 24));
-        if (daysLeft > 0) {
-          $deadlineTimer.text(daysLeft);
-          $deadlineTimerText.text(deadline[1]);
-          break;
-        }
-      }
+      var daysLeft = Math.round((new Date(2017, 8, 1) - Date.now()) / (1000 * 60 * 60 * 24));
+      $deadlineTimer.text(daysLeft);
     };
 
     var updateRoutes = function(){
